@@ -2,17 +2,16 @@ const ctx = document.querySelector('canvas').getContext('2d');
 let state = null;
 
 document.addEventListener('keydown', e => {
-  console.log(e);
   if (e.code === 'KeyR') { document.querySelector('span').textContent = 0; init(); }
-  if (e.code === 'Space') { state.canon.fire = true; }
-  if (e.code === 'ArrowLeft') { state.canon.v = -1; return; }
-  if (e.code === 'ArrowRight') { state.canon.v = 1; return; }
+  if (e.code === 'Space') { state.canon.f = true; }
+  if (e.code === 'ArrowLeft') { state.canon.l = true; }
+  if (e.code === 'ArrowRight') { state.canon.r = true; }
 });
 
 document.addEventListener('keyup', e => {
-  if (e.code === 'Space') { state.canon.fire = false; }
-  if (e.code === 'ArrowLeft' && state.canon.v === -1) { state.canon.v = 0; return; }
-  if (e.code === 'ArrowRight' && state.canon.v === 1) { state.canon.v = 0; return; }
+  if (e.code === 'Space') { state.canon.f = false; }
+  if (e.code === 'ArrowLeft') { state.canon.l = false; }
+  if (e.code === 'ArrowRight') { state.canon.r = false; }
 });
 
 const rectsIntersect = (a, b) => a.x <= b.x + b.w && b.x <= a.x + a.w && a.y <= b.y + b.h && b.y <= a.y + a.h;
@@ -34,7 +33,7 @@ const dropBomb = () => {
 const update = () => {
   const aliensFlat = state.aliens.flat();
 
-  if (state.canon.fire && Date.now() - (state.lastS + state.freq) > 0) {
+  if (state.canon.f && Date.now() - (state.lastS + state.freq) > 0) {
     state.shots.push({ x: state.canon.x + 4, y: state.canon.y, w: state.bW, h: state.bH });
     state.lastS = Date.now();
   }
@@ -67,9 +66,10 @@ const update = () => {
   if (Date.now() - (state.lastB + state.freq * 2) > 0) { state.lastB = Date.now(); dropBomb(); }
   state.aliens.forEach(r => r.forEach(c => { c.x = state.left ? c.x - state.aV : c.x + state.aV; }));
 
-  state.canon.x += state.canon.v;
-  if (state.canon.x < 0) { state.canon.x = 0; state.canon.v = 0; }
-  if (state.canon.x > ctx.canvas.width - state.canon.w) { state.canon.x = ctx.canvas.width - state.canon.w; state.canon.v = 0; }
+  if (state.canon.r) { state.canon.x += 1; }
+  if (state.canon.l) { state.canon.x -= 1; }
+  if (state.canon.x < 0) { state.canon.x = 0; }
+  if (state.canon.x > ctx.canvas.width - state.canon.w) { state.canon.x = ctx.canvas.width - state.canon.w; }
 };
 
 const draw = () => {
@@ -84,7 +84,7 @@ const main = () => { if (!state.over) { update(); draw(); } requestAnimationFram
 
 const init = (cx = 125, cy = 375, s = 0, v = 0.5) => {
   state = { lastS: 0, lastB: 0, freq: 500, spacing: 20, aW: 15, aH: 10, bW: 2, bH: 2, aV: v, drop: 10, left: true, score: s, over: false };
-  state.canon = { x: cx, y: cy, w: 10, h: 10, v: 0, fire: false };
+  state.canon = { x: cx, y: cy, w: 10, h: 10, f: false, l: false, r: false };
   state.shots = [];
   state.bombs = [];
   state.aliens = [[], [], [], [], []];
