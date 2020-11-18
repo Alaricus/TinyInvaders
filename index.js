@@ -22,7 +22,7 @@ const dropBomb = () => {
     const randomCol = Math.floor(Math.random() * 10);
     for (let i = 4; i >= 0; i--) {
       if (!state.aliens[i][randomCol].dead) {
-        state.bombs.push({ x: state.aliens[i][randomCol].x + 5, y: state.aliens[i][randomCol].y, w: 5, h: 5 });
+        state.bombs.push({ x: state.aliens[i][randomCol].x + 5, y: state.aliens[i][randomCol].y, w: 10, h: 10 });
         ready = true;
         break;
       }
@@ -34,7 +34,7 @@ const update = () => {
   const aliensFlat = state.aliens.flat();
 
   if (state.canon.f && Date.now() - (state.lastS + state.freq) > 0) {
-    state.shots.push({ x: state.canon.x + 4, y: state.canon.y, w: state.bW, h: state.bH });
+    state.shots.push({ x: state.canon.x + 9, y: state.canon.y, w: state.sW, h: state.sH });
     state.lastS = Date.now();
   }
 
@@ -74,22 +74,24 @@ const update = () => {
 
 const draw = () => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-  ctx.fillRect(state.canon.x, state.canon.y, 10, 10);
+  ctx.fillRect(state.canon.x, state.canon.y, state.canon.w, state.canon.h);
   state.shots.forEach(s => ctx.fillRect(s.x, s.y, s.w, s.h));
+  ctx.fillStyle = '#ff0000';
   state.bombs.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
+  ctx.fillStyle = '#000000';
   state.aliens.forEach(row => row.forEach(col => !col.dead && ctx.fillRect(col.x, col.y, col.w, col.h)));
 };
 
 const main = () => { if (!state.over) { update(); draw(); } requestAnimationFrame(main); };
 
-const init = (cx = 125, cy = 375, s = 0, v = 0.5) => {
-  state = { lastS: 0, lastB: 0, freq: 500, spacing: 20, aW: 15, aH: 10, bW: 2, bH: 2, aV: v, drop: 10, left: true, score: s, over: false };
-  state.canon = { x: cx, y: cy, w: 10, h: 10, f: false, l: false, r: false };
+const init = (cx = 250, cy = 275, s = 0, v = 0.5) => {
+  state = { lastS: 0, lastB: 0, freq: 500, spacing: 35, aW: 22, aH: 12, sW: 2, sH: 5, aV: v, drop: 10, left: true, score: s, over: false };
+  state.canon = { x: cx, y: cy, w: 15, h:8, f: false, l: false, r: false };
   state.shots = [];
   state.bombs = [];
   state.aliens = [[], [], [], [], []];
   state.aliens.forEach((row, i) => {
-    for (let j = 0; j < 10; j++) { row.push({ x: j * state.spacing, y: i * state.spacing, w: state.aW, h: state.aH }); }
+    for (let j = 0; j < 10; j++) { row.push({ x: j * state.spacing, y: i * state.spacing / 1.5, w: state.aW, h: state.aH }); }
   });
 };
 
