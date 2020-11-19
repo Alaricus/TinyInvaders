@@ -34,7 +34,7 @@ const update = () => {
   const aliensFlat = state.aliens.flat();
 
   if (state.canon.f && Date.now() - (state.lastS + state.freq) > 0) {
-    state.shots.push({ x: state.canon.x + 9, y: state.canon.y, w: state.sW, h: state.sH });
+    state.shots.push({ x: state.canon.x + 7, y: state.canon.y, w: state.sW, h: state.sH });
     state.lastS = Date.now();
   }
 
@@ -86,7 +86,7 @@ const main = () => { if (!state.over) { update(); draw(); } requestAnimationFram
 
 const init = (cx = 250, cy = 275, s = 0, v = 0.5) => {
   state = { lastS: 0, lastB: 0, freq: 500, spacing: 35, aW: 22, aH: 12, sW: 2, sH: 5, aV: v, drop: 10, left: true, score: s, over: false };
-  state.canon = { x: cx, y: cy, w: 15, h:8, f: false, l: false, r: false };
+  state.canon = { x: cx, y: cy, w: 16, h:8, f: false, l: false, r: false };
   state.shots = [];
   state.bombs = [];
   state.aliens = [[], [], [], [], []];
