@@ -1,6 +1,6 @@
 # TinyInvaders
 
-TinySweeper is my version of the classic Space Invaders game written in 100 (or fewer) lines of JavaScript. [Try it out](https://alaricus.github.io/TinyInvaders/).
+TinyInvaders is my version of the classic Space Invaders game written in 100 (or fewer) lines of JavaScript. [Try it out](https://alaricus.github.io/TinyInvaders/).
 
 ## The 'Tiny' Challenge
 
